@@ -4,7 +4,14 @@ parasails.registerPage('available-things', {
   //  ╩╝╚╝╩ ╩ ╩╩ ╩╩═╝  ╚═╝ ╩ ╩ ╩ ╩ ╚═╝
   data: {
     things:[],
-    confirmDeleteThingModalOpen: false
+    confirmDeleteThingModalOpen: false,
+    selectedThing: undefined,
+
+    //Syncing / Loading state
+    syncing:false,
+
+    //Server Error State
+    cloudError:''
   },
 
   //  ╦  ╦╔═╗╔═╗╔═╗╦ ╦╔═╗╦  ╔═╗
@@ -22,17 +29,19 @@ parasails.registerPage('available-things', {
   //  ║║║║ ║ ║╣ ╠╦╝╠═╣║   ║ ║║ ║║║║╚═╗
   //  ╩╝╚╝ ╩ ╚═╝╩╚═╩ ╩╚═╝ ╩ ╩╚═╝╝╚╝╚═╝
   methods: {
-    clickThing: async function(thingId){
-      console.log('clicked thing #'+thingId);
-      await Cloud.destroyOneThing.with({id:thingId});
-      _.remove(this.things,{id:thingId});
-      this.$forceUpdate();
-    },
+    // clickThing: async function(thingId){
+    //   console.log('clicked thing #'+thingId);
+    //   await Cloud.destroyOneThing.with({id:thingId});
+    //   _.remove(this.things,{id:thingId});
+    //   this.$forceUpdate();
+    // },
     clickDeleteThing: function(thingId){
       console.log('clicked the "delete" button');
       this.confirmDeleteThingModalOpen = true;
+      this.selectedThing = _.find(this.things,{id:thingId});
     },
-    closeModal:function(){
+    closeDeleteThingModal:function(){
+      this.selectedThing = undefined;
       this.confirmDeleteThingModalOpen = false;
     }
   }

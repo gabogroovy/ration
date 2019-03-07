@@ -11,7 +11,7 @@
     <div class="listings" v-if="things.length > 0">
       <div class="card" :key="'thing'+thing.id" v-for="thing in things">
         <div class="card-options">
-          <span class="options-button" data-toggle="tooltip" data-placement="top" title="Delete" @click="clickDeleteThing(thing.id)" v-if="thing.owner === me.id"><span class="fa fa-trash-o text-danger"></span></span>
+          <span class="options-button" data-toggle="tooltip" data-placement="top" title="Delete" @click="clickDeleteThing(thing.id)" v-if="thing.owner.id === me.id"><span class="fa fa-trash-o text-danger"></span></span>
         </div>
         <span class="label" v-if="thing.label">{{thing.label}}<br /></span>
         <small class="owner text-secondary" v-if="thing.owner === me.id"><span class="fa fa-home mr-1"></span> Mine</small>
@@ -22,21 +22,23 @@
   </div>
 
   <% /*"Confirm Delete Thing" Modal*/%>
-  <modal v-if="confirmDeleteThingModalOpen">
-    <header class="modal-header">
-      <h5 class="modal-tittle">Remove this item?</h5>
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </header>
-    <section class="modal-body">
-      <p>Are you sure you want to remove this item?</p>
-      <p>This item will no longer be available to share with friends.</p>
-    </section>
-    <footer class="modal-footer">
-      <button class="btn btn-outline-secondary mr-1" data-dismiss="modal" @click="closeModal()">Nevermind</button>
-      <button class="btn btn-danger ml-1">Delete</button>
-    </footer>
+  <modal v-if="confirmDeleteThingModalOpen && selectedThing" v-cloak key="delete" @close="closeDeleteThingModal()">
+    <ajax-form action="destroyOneThing" :syncing.sync="syncing" :cloud-error.sync="cloudError">
+      <header class="modal-header">
+        <h5 class="modal-tittle">Remove this item?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </header>
+      <section class="modal-body">
+        <p>Are you sure you want to remove this {{selectedThing.label || 'item' }}?</p>
+        <p>This item will no longer be available to share with friends.</p>
+      </section>
+      <footer class="modal-footer">
+        <button class="btn btn-outline-secondary mr-1" data-dismiss="modal">Nevermind</button>
+        <button class="btn btn-danger ml-1">Delete</button>
+      </footer>
+    </ajax-form>
   </modal>
 
 </div>

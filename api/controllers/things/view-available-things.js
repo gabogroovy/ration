@@ -43,10 +43,7 @@ module.exports = {
     // })
     // .populate('owner');
 
-    var things = await Thing.find({
-      or:[{owner:this.req.me.id},
-      {owner:{in:_.pluck(this.req.me.friends,'id')}}]
-    }).populate('owner');
+    var things = await Thing.find().populate('owner');
 
     // Respond with view.
     return {
