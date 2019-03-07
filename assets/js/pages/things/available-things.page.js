@@ -40,9 +40,25 @@ parasails.registerPage('available-things', {
       this.confirmDeleteThingModalOpen = true;
       this.selectedThing = _.find(this.things,{id:thingId});
     },
+
     closeDeleteThingModal:function(){
       this.selectedThing = undefined;
       this.confirmDeleteThingModalOpen = false;
+    },
+
+    handleParsingDeleteThingForm:function(){
+      return {
+        id:this.selectedThing.id
+      };
+    },
+
+    submittedDeleteThingForm:function(){
+      console.log('Ok it worked!');
+      _.remove(this.things,{id:this.selectedThing.id});
+      this.$forceUpdate();
+
+      this.confirmDeleteThingModalOpen = false;
+      this.selectedThing = undefined;
     }
   }
 });
